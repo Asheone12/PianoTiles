@@ -80,8 +80,12 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
     private GameListener mGameListener;
 
     public void restart() {
+        mIsRuning = false;
         initBlock();
         // 开启线程
+        if(mDrawThread != null){
+            mDrawThread = null;
+        }
         mIsRuning = true;
         mDrawThread = new Thread(this);
         mDrawThread.start();
