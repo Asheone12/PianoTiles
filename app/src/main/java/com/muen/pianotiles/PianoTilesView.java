@@ -84,12 +84,8 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
     private GameListener mGameListener;
 
     public void restart() {
-        mIsRuning = false;
         initBlock();
         // 开启线程
-        if(mDrawThread != null){
-            mDrawThread = null;
-        }
         mIsRuning = true;
         mDrawThread = new Thread(this);
         mDrawThread.start();
@@ -117,7 +113,6 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         initBlock();
-
         mBlockPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mScorePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mScorePaint.setTextSize(DensityUtil.sp2px(getContext(),mScore.getTextSize()));
@@ -224,7 +219,7 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
             public void run() {
                 mIsRuning = false;
             }
-        },1000);
+        },500);
     }
 
     /**
