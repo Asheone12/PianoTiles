@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         Log.e("DEMO","number == "+number);
                         if(mAlertScoreDialog!=null){
+                            mPianoTilesView.setTouchable(false);
                             mAlertScoreDialog.setScore(number);
                             mAlertScoreDialog.show();
                         }

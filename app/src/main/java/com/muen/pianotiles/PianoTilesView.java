@@ -76,6 +76,10 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
      * 得分
      */
     private Score mScore;
+    /**
+     * 是否可点击
+     */
+    private boolean touchable = false;
 
     private GameListener mGameListener;
 
@@ -89,6 +93,10 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
         mIsRuning = true;
         mDrawThread = new Thread(this);
         mDrawThread.start();
+    }
+
+    public void setTouchable(boolean flag) {
+        this.touchable = flag;
     }
 
     interface GameListener{
@@ -108,11 +116,7 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
     }
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-
-
-
         initBlock();
-
 
         mBlockPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mScorePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -166,24 +170,26 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
     }
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            float rx = event.getX();
-            float ry = event.getY();
-            for (int i = 0; i < mBlockData.size(); i++) {
-                Block block = mBlockData.get(i);
-                int col = i / COL % LINE;
-                if (col == (mUnLine - 1)) {
-                    if (block.isClickRange(rx, ry)) {
-                        mUnLine = col;
-                        if (block.isActive()) {
-                            block.toggleVisited();
-                            mScore.update();
-                            break;
-                        }
-                        if (block.isStandard()) {
-                            block.toggleError();
-                            endGame();
-                            break;
+        if(touchable){
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                float rx = event.getX();
+                float ry = event.getY();
+                for (int i = 0; i < mBlockData.size(); i++) {
+                    Block block = mBlockData.get(i);
+                    int col = i / COL % LINE;
+                    if (col == (mUnLine - 1)) {
+                        if (block.isClickRange(rx, ry)) {
+                            mUnLine = col;
+                            if (block.isActive()) {
+                                block.toggleVisited();
+                                mScore.update();
+                                break;
+                            }
+                            if (block.isStandard()) {
+                                block.toggleError();
+                                endGame();
+                                break;
+                            }
                         }
                     }
                 }
@@ -193,6 +199,7 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
         return super.onTouchEvent(event);
     }
     public void startGame() {
+        setTouchable(true);
         setZOrderOnTop(true);
         TimerTask task = new TimerTask() {
             @Override
