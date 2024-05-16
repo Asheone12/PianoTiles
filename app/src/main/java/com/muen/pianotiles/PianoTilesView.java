@@ -258,7 +258,9 @@ public class PianoTilesView extends SurfaceView implements SurfaceHolder.Callbac
     public void surfaceDestroyed(SurfaceHolder holder) {
         // 通知关闭线程
         mIsRuning = false;
-        mScheduled.shutdown();
+        if(mScheduled!=null){
+            mScheduled.shutdown();
+        }
         if(mGameListener!=null){
             mGameListener.gameEnd(mScore.getNumber());
         }
